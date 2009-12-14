@@ -26,11 +26,9 @@ def print_nodetree(n, indent=0):
     elif isinstance(n, ScoreNode):
         for m in n.nodes:
             print_nodetree(m, indent + 1)
-        print ' '*indent + 'S', n.score, len(n.nodes)
+        print ' '*indent + 'S', n.score
     else:
-        for m in n.nodes:
-            print_nodetree(m, indent + 1)
-        print ' '*indent + 'T', len(n.nodes)
+        assert 0
 
 def reprint_nodetree(n, fp):
     if isinstance(n, LeafNode):
@@ -77,16 +75,15 @@ def parse_node():
             node = LeafNode(name, score)
             nodes.append(node)
 
-    assert 0
+def parse_rootnode():
+    treefp.next()
+    n = parse_node()
+    assert n.score == 'XXX'
+    return n.nodes
     
-#treefp = open('data/NCBIsoilDataNirk.tree')
-#treefp = open('data/foo4.tree')
-#treefp = open('data/foo.tree')
-#treefp = iter(open('data/foo.tree'))
-#treefp = open('data/foo3.tree')
 treefp = iter(open(sys.argv[1]))
 
-treefp.next()
-n = parse_node()
+root_nodes = parse_rootnode()
 
-print_nodetree(n, 0)
+for n in root_nodes:
+    print_nodetree(n, 0)
