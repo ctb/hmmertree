@@ -17,6 +17,9 @@ class ScoreNode(object):
         self.nodes = subnodes
         self.score = score
 
+    def __repr__(self):
+        return "<ScoreNode(%s)>" % self.score
+
 def print_nodetree(n, indent=0):
     if isinstance(n, LeafNode):
         print ' '*indent + n.name, n.score, 'L'
@@ -50,40 +53,40 @@ def parse_node():
     nodes = []
 
     while 1:
-        ch = treefp.read(1)
-        if ch == '(':
-            subnode = parse_node()
-            nodes.append(subnode)
-        elif ch == ')':
-            name, score = buf.split(':')
-            buf = ''
-            name = name.strip()
-            if name:
-                nodes.append(LeafNode(name, score))
-                return InnerNode(nodes)
-            else:
-                return ScoreNode(nodes, score)
-        elif ch == ',':
-            name, score = buf.split(':')
-            buf = ''
-            name = name.strip()
-            if name:
-                nodes.append(LeafNode(name, score))
-            else:
-                nodes = [ScoreNode(nodes, score)]
+        try:
+            line = treefp.next()
+            lineno += 1
+        except StopIteration:
+            return ScoreNode(nodes, 'XXX')
+
+        line = line.strip().rstrip(';')
+            
+#        print '*', line, lineno
+        if line == '(':
+#            print 'push'
+            node = parse_node()
+            nodes.append(node)
+        elif line[0] == ':':
+#            print 'pop', len(nodes)
+            assert len(nodes) == 2
+            score = line[:-1]
+            node = ScoreNode(nodes, score)
+            return node
         else:
-            if ch == '\n':
-                lineno += 1
-            buf += ch
+            name, score = line[:-1].split(':')
+            node = LeafNode(name, score)
+            nodes.append(node)
 
     assert 0
     
 #treefp = open('data/NCBIsoilDataNirk.tree')
 #treefp = open('data/foo4.tree')
 #treefp = open('data/foo.tree')
-treefp = open('data/foo2.tree')
+#treefp = iter(open('data/foo.tree'))
 #treefp = open('data/foo3.tree')
-assert treefp.read(1) == '('
+treefp = iter(open(sys.argv[1]))
+
+treefp.next()
 n = parse_node()
 
 print_nodetree(n, 0)
