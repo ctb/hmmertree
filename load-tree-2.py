@@ -23,11 +23,11 @@ def print_nodetree(n, indent=0):
     elif isinstance(n, ScoreNode):
         for m in n.nodes:
             print_nodetree(m, indent + 1)
-        print ' '*indent + 'S', n.score
+        print ' '*indent + 'S', n.score, len(n.nodes)
     else:
         for m in n.nodes:
             print_nodetree(m, indent + 1)
-        print ' '*indent + 'T'
+        print ' '*indent + 'T', len(n.nodes)
 
 def reprint_nodetree(n, fp):
     if isinstance(n, LeafNode):
