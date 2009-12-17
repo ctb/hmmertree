@@ -1,4 +1,10 @@
 #! /usr/bin/env python
+"""
+Some tools for exploring quicktree-generated trees based on hmmalign.
+
+Focused right now on metagenomic distance matrix stuff.
+
+"""
 import tree_parser
 import bincount
 
@@ -84,9 +90,8 @@ def count_children(node):
     total = 0
     for m in node.subnodes:
         total += count_children(m)
-    total += 1
 
-    return total
+    return total + 1
 
 def count_leaves(node, cutoff=None):
     if cutoff is not None:
@@ -94,7 +99,7 @@ def count_leaves(node, cutoff=None):
         if score > cutoff:
             return 0
             
-    if node.name:
+    if node.name:                       # leaf node: +1!
         return 1
     
     total = 0
@@ -165,41 +170,6 @@ if __name__ == '__main__':
     treefp = iter(open(sys.argv[1]))
 
     root_nodes = tree_parser.parse_rootnode(treefp)
-
-    #b = bincount.BinCount()
-
-    #for n in root_nodes:
-    #  print_nodetree(n, 0)
-
-    #b.bin(.01).write(open('xxx', 'w'))
-
-    #names = collect_non_ncbi_names(root_nodes)
-    #print names
-
-    #for n in root_nodes:
-    #    print max_score(n)
-    
-    #do(root_nodes[0], 0.1)
-
-    x = get_node_in_tree_containing(root_nodes,
-                                   'MB3W1.ERB0AAU01CEPHT_1--blastp',
-                                   'MB3W1.ERB0AAU01CEPHT_1',
-                                   'gi|255519339|dbj|BAH90646.1|')
-
-    print max_score(x)
-    print len(get_leaf_names(x))
-
-    fp = open('xxx', 'w')
-    fp.write("\n".join(get_leaf_names(x)))
-
-    ##
-
-    x = get_node_in_tree_containing(root_nodes,
-                                    'FD0LRHA02H3X9Q_6--blastp',
-                                    'MB3W3.ERB0AAU02IXPBU_2--blastp')
-    #print_nodetree(x)
-    #print max_score(x)
-    #print len(get_leaf_names(x))
 
     ##
 
