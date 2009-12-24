@@ -64,7 +64,7 @@ def _parse(treefp):
         else:                           # name:branch_length => LeafNode
             
             line = line[:-1]            # remove )$
-            name, branch_length = line[:-1].split(':')
+            name, branch_length = line.rsplit(':', 1)
             node = LeafNode(name, branch_length)
             subnodes.append(node)
 
