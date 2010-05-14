@@ -21,6 +21,10 @@ class LeafNode(object):
         self.branch_length = float(branch_length)
         self.subnodes = []
         self.parent = None
+        self.originals = None           # @CTB
+
+    def __repr__(self):
+        return '%s:%.2f' % (self.name, self.branch_length)
 
 class BranchNode(object):
     """
@@ -34,6 +38,9 @@ class BranchNode(object):
         self.subnodes = subnodes
         self.branch_length = float(branch_length)
         self.parent = None
+
+    def __repr__(self):
+        return ':%.2f' % (self.branch_length)
 
 def _parse(treefp):
     """
